@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#172e2a">
+  <meta name="description" content="今日やることを決めて、実行と進捗を記録する自分用プランナー。">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <title>今日の作戦室</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="eyebrow">PERSONAL PLANNER</div>
+    <h1>今日の作戦室</h1>
+    <p>考える時間を減らして、行動する時間を増やす。</p>
+    <div class="hero-stats">
+      <div><span id="todayLabel">今日</span><strong id="dateLabel">—</strong></div>
+      <div><span>今日の進捗</span><strong id="heroProgress">0%</strong></div>
+      <div><span>連続記録</span><strong id="streakLabel">0日</strong></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="section-heading"><span class="num">01</span><div><h2>今日の作戦を立てる</h2><p>時間とコンディションに合わせて調整できます。</p></div></div>
+      <label for="goal">今日の最優先分野</label>
+      <select id="goal">
+        <option>勉強・受験</option><option>副業・制作</option><option>お金・将来</option><option>頭の整理</option><option>自分で決める</option>
+      </select>
+      <div class="two-col">
+        <div><label for="minutes">使える時間</label><select id="minutes"><option value="30">30分</option><option value="60" selected>1時間</option><option value="90">90分</option><option value="120">2時間</option></select></div>
+        <div><label for="energy">コンディション</label><select id="energy"><option value="低め">低め</option><option value="普通" selected>普通</option><option value="高め">高め</option></select></div>
+      </div>
+      <label for="focusNote">今日のメモ・目標</label>
+      <textarea id="focusNote" rows="2" placeholder="例：英検のリスニングを10問解く"></textarea>
+      <div class="button-row">
+        <button id="generateBtn" class="primary">今日の計画を作る</button>
+        <button id="addTaskBtn" class="secondary">＋ タスクを追加</button>
+      </div>
+      <div id="taskList" class="task-list"></div>
+      <div class="progress-wrap">
+        <div class="progress-top"><span>今日の達成率</span><strong id="progressText">0 / 0 完了</strong></div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading"><span class="num">02</span><div><h2>振り返り</h2><p>できたことと、次に変えることを記録。</p></div></div>
+      <label for="goodNote">今日できたこと</label><textarea id="goodNote" rows="2" placeholder="小さなことでもOK"></textarea>
+      <label for="nextNote">明日への改善点</label><textarea id="nextNote" rows="2" placeholder="次はどう工夫する？"></textarea>
+      <button id="saveReflection" class="primary full">振り返りを保存</button>
+      <div id="savedMsg" class="saved-msg" role="status"></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading"><span class="num">03</span><div><h2>記録とリマインダー</h2><p>データ保存・端末間同期の設定。</p></div></div>
+      <div class="setting-card">
+        <div><strong>この端末に保存</strong><p>タスクや振り返りは自動保存されます。</p></div><span class="status-pill" id="localStatus">有効</span>
+      </div>
+      <div class="setting-card">
+        <div><strong>端末間の同期</strong><p id="syncDescription">Firebaseを設定するとiPhone・iPad間で同期できます。</p></div><span class="status-pill" id="syncStatus">未設定</span>
+      </div>
+      <details>
+        <summary>クラウド同期を設定する（Firebase）</summary>
+        <p class="help">FirebaseプロジェクトのWebアプリ設定値を入力します。設定値はこの端末に保存されます。同期を使う場合はFirestoreと匿名認証を有効にしてください。</p>
+        <label for="firebaseConfig">Firebase Web config（JSON）</label>
+        <textarea id="firebaseConfig" rows="5" autocapitalize="off" spellcheck="false" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","appId":"..."}'></textarea>
+        <label for="syncCode">同期コード（自分の端末だけで共有）</label>
+        <input id="syncCode" type="password" placeholder="自分で決めた長めのコード">
+        <div class="button-row"><button id="connectSync" class="primary">同期を接続</button><button id="disconnectSync" class="secondary">同期を解除</button></div>
+        <p class="help warning">同期コードは共有相手に教えないでください。Firebaseのセキュリティルール設定が必要です。詳しい手順は同梱のREADMEを確認してください。</p>
+      </details>
+      <div class="setting-card">
+        <div><strong>通知の許可</strong><p id="notificationDescription">アプリを開いている間のリマインダーに対応。</p></div><span class="status-pill" id="notificationStatus">未設定</span>
+      </div>
+      <label for="reminderTime">リマインダー時刻</label>
+      <div class="two-col">
+        <input id="reminderTime" type="time" value="19:00">
+        <button id="enableNotifications" class="secondary">通知を有効にする</button>
+      </div>
+      <p class="help">iPhone/iPadでは、ホーム画面に追加したWebアプリから通知を許可してください。Webの通知はOS・ブラウザの制約があり、アプリを閉じた状態で指定時刻に必ず通知する機能は、別途プッシュ通知サーバーの設定が必要です。</p>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading"><span class="num">04</span><div><h2>データ管理</h2><p>バックアップ・復元・リセット。</p></div></div>
+      <div class="button-row">
+        <button id="exportBtn" class="secondary">バックアップを書き出す</button>
+        <label class="file-button secondary">バックアップを読み込む<input id="importFile" type="file" accept="application/json"></label>
+      </div>
+      <button id="clearToday" class="danger full">今日のタスクだけリセット</button>
+      <p class="help">機種変更前にはバックアップを書き出しておくと安心です。</p>
+    </section>
+  </main>
+  <footer>今日の作戦室 · 自分のペースで、着実に。</footer>
+  <div id="toast" class="toast" role="status"></div>
+  <dialog id="taskDialog">
+    <form method="dialog" id="taskForm">
+      <h2>タスクを追加</h2>
+      <label for="taskName">タスク名</label><input id="taskName" required maxlength="100" placeholder="例：英単語を20個復習">
+      <label for="taskDuration">目安時間（分）</label><input id="taskDuration" type="number" min="1" max="600" value="15" required>
+      <div class="button-row"><button value="cancel" class="secondary">キャンセル</button><button id="confirmTask" value="default" class="primary">追加する</button></div>
+    </form>
+  </dialog>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

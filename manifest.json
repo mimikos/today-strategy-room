@@ -1,0 +1,46 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Strat's Food Expansion [RP] (v1.8)",
+    "description": "An add-on which revamps food progression, inspired by various Java mods. Created by §lStratospheer§r. Co-developed with §lTomanex§r and §lBarred§r since v1.8.",
+    "uuid": "091728a7-0489-4088-8144-f58c1ebb6b2b",
+    "version": [ 1, 8, 0 ],
+    "min_engine_version": [ 1, 26, 30 ]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "7ce05f59-a775-4c01-95ef-c8960c460e3e",
+      "version": [ 1, 8, 0 ]
+    }
+  ],
+	"subpacks": [
+    {
+      "folder_name": "disabled",
+      "name": "Food Info - Disabled",
+      "memory_tier": 0
+    },
+    {
+      "folder_name": "numbered",
+      "name": "Food Info - Numbered (2x)",
+      "memory_tier": 0
+    },
+    {
+      "folder_name": "visualised",
+      "name": "Food Info - Visualised ()",
+      "memory_tier": 0
+    }
+	],
+  "dependencies": [
+    {
+      "uuid": "c84d5910-8a27-4c7b-b776-918eaa0686f5",
+      "version": [ 1, 8, 0 ]
+    }
+  ],
+  "capabilities": [
+    "pbr"
+  ],
+  "metadata": {
+    "product_type": "addon"
+  }
+}
